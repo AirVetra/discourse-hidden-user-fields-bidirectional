@@ -4,3 +4,8 @@
 body[class*="show-custom-field-"] .public-user-field {
   display: block !important;
 }
+
+// Prevent line break in "Allowed Groups" label
+.admin-config-area-card__content label {
+  white-space: nowrap;
+}
