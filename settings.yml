@@ -3,12 +3,12 @@ field_visibility_rules:
   default: []
   description: "List of field visibility rules. Each rule defines which groups can see which custom user field."
   schema:
-    name: field_visibility_rule
+    name: New Field
     identifier: field_name
     properties:
       field_name:
         type: string
-        label: "Custom Field Name"
+        label: "Field Name"
         description: "The name of the custom user field (case-insensitive)"
         validations:
           min_length: 1
