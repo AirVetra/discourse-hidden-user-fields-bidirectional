@@ -14,7 +14,7 @@ export default {
 
       // Get user groups (empty array if not logged in)
       const userGroups = currentUser?.groups || [];
-      const userGroupNames = userGroups.map(g => g.name);
+      const userGroupIds = userGroups.map(g => g.id);
 
       const site = container.lookup("service:site");
       const userFields = site.get("user_fields");
@@ -57,9 +57,9 @@ export default {
         }
 
         // Check if user is in any of the allowed groups for this rule
-        const allowedGroupsStr = rule.allowed_groups || "";
-        const allowedGroups = allowedGroupsStr.split(',').map(g => g.trim()).filter(g => g.length > 0);
-        const isInAllowedGroup = allowedGroups.some(group => userGroupNames.includes(group));
+        // groups type returns an array of group IDs
+        const allowedGroupIds = rule.allowed_groups || [];
+        const isInAllowedGroup = allowedGroupIds.some(groupId => userGroupIds.includes(groupId));
 
         if (isInAllowedGroup) {
           // Inject specific show CSS for this field with unique ID per rule

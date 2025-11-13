@@ -10,7 +10,7 @@ A Discourse theme component that controls visibility of custom user fields based
 - **Multiple Rules**: Configure multiple field/group combinations
 - **User Card & Profile**: Works on both user cards (hover) and full profile pages
 - **Native Display**: Uses Discourse's native field styling
-- **Easy Configuration**: JSON object editor for managing visibility rules
+- **Easy Configuration**: Object editor with group picker for managing visibility rules
 
 ## Installation
 
@@ -36,29 +36,18 @@ After installation, configure visibility rules:
 
 1. Click on the installed theme
 2. Go to **Settings**
-3. Edit **field_visibility_rules** using the JSON editor
-4. Add rules in this format:
+3. Edit **field_visibility_rules** using the object editor
+4. For each rule:
+   - Click **Add Field**
+   - Enter the **Field Name** (exact name of your custom user field)
+   - Use the **Allowed Groups** picker to select one or more groups
+   - Click the checkmark to save
 
-Each rule should have:
-- **Field Name**: The exact name of the custom user field (case-insensitive)
-- **Allowed Groups**: Comma-separated list of group names (e.g., `employees, admins, managers`)
-  - To find available group names: Go to **Admin > Groups** and use the exact group name as shown
+**Example:**
+- Field Name: `company`
+- Allowed Groups: Select `employees` from the group picker
 
-**Example configurations:**
-
-Single group:
-```
-Field Name: company
-Allowed Groups: employees
-```
-
-Multiple groups:
-```
-Field Name: department
-Allowed Groups: staff, managers, admins
-```
-
-Users in ANY of the listed groups will be able to see the field.
+Users in ANY of the selected groups will be able to see the field.
 
 ## Requirements
 

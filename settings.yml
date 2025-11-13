@@ -13,8 +13,6 @@ field_visibility_rules:
         validations:
           min_length: 1
       allowed_groups:
-        type: string
+        type: groups
         label: "Allowed Groups"
-        description: "Comma-separated list of group names (e.g., employees, admins, managers)"
-        validations:
-          min_length: 1
+        description: "Select groups that can see this field"
