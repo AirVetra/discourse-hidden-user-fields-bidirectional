@@ -1,6 +1,6 @@
 {
   "name": "User Field Visibility",
   "component": true,
-  "about_url": "https://github.com/dereklputnam/discourse-user-field-visibility",
-  "license_url": "https://github.com/dereklputnam/discourse-user-field-visibility/blob/main/LICENSE"
+  "about_url": "https://github.com/dereklputnam/discourse-hidden-user-fields",
+  "license_url": "https://github.com/dereklputnam/discourse-hidden-user-fields/blob/main/LICENSE"
 }

@@ -27,10 +27,10 @@ export default {
         return;
       }
 
-      // Track which fields have already been processed
+      // Track which fields have already been processed for hiding
       const processedFields = new Set();
 
-      rules.forEach((rule) => {
+      rules.forEach((rule, ruleIndex) => {
         const customField = userFields.find(
           (field) => field.name.toLowerCase() === rule.field_name.toLowerCase()
         );
@@ -66,9 +66,9 @@ export default {
         const isInAllowedGroup = allowedGroups.some(group => userGroupNames.includes(group));
 
         if (isInAllowedGroup) {
-          // Inject specific show CSS for this field
+          // Inject specific show CSS for this field with unique ID per rule
           const showStyle = document.createElement('style');
-          showStyle.id = `custom-field-visibility-show-${fieldId}`;
+          showStyle.id = `custom-field-visibility-show-${fieldId}-rule-${ruleIndex}`;
           showStyle.innerHTML = `
             .public-user-field.${fieldName} { display: block !important; }
             .public-user-field.public-user-field__${fieldName} { display: block !important; }
