@@ -6,18 +6,14 @@ export default {
   initialize(container) {
     withPluginApi("0.8", (api) => {
       const currentUser = api.getCurrentUser();
-
-      if (!currentUser) {
-        return;
-      }
-
       const rules = settings.field_visibility_rules;
 
       if (!rules || rules.length === 0) {
         return;
       }
 
-      const userGroups = currentUser.groups || [];
+      // Get user groups (empty array if not logged in)
+      const userGroups = currentUser?.groups || [];
       const userGroupNames = userGroups.map(g => g.name);
 
       const site = container.lookup("service:site");
