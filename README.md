@@ -59,6 +59,10 @@ If fields are not showing up as expected:
 2.  Ensure the user is actually in the allowed group.
 3.  Check the browser console for any errors (if debug mode is enabled).
 
+## Roadmap
+
+In future updates, I plan to add granular group settings to define exactly which groups can see and be seen (e.g., allowing Group A to see Group B, but not vice versa).
+
 ## Author
 
 **Alexey Goloviznin** (AirVetra)
