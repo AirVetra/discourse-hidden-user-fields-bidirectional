@@ -1,6 +1,6 @@
 {
-  "name": "Hidden User Fields",
+  "name": "Hidden User Fields (Bidirectional)",
   "component": true,
-  "about_url": "https://github.com/dereklputnam/discourse-hidden-user-fields",
-  "license_url": "https://github.com/dereklputnam/discourse-hidden-user-fields/blob/main/LICENSE"
+  "about_url": "https://github.com/AirVetra/discourse-hidden-user-fields-bidirectional",
+  "license_url": "https://github.com/AirVetra/discourse-hidden-user-fields-bidirectional/blob/main/LICENSE"
 }
