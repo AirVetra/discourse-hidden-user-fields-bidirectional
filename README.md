@@ -1,6 +1,8 @@
 # Hidden User Fields for Discourse
 
-> **⚠️ Disclaimer:** The author assumes no liability for data exposure or unintended visibility of user fields. Test thoroughly before production use.
+> **⚠️ SECURITY WARNING:** This component provides **UI-level hiding ONLY**. Data is still accessible via API. **[Read full security disclosure →](SECURITY.md)**
+>
+> **Disclaimer:** The author assumes no liability for data exposure. Test thoroughly before production use.
 
 A Discourse theme component that controls visibility of custom user fields based on **bidirectional group membership**. This ensures that sensitive fields are only shared between members of a specific group (e.g., a "Verified Users" group).
 
