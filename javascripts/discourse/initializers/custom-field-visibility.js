@@ -14,7 +14,6 @@ export default {
 
   initialize(container) {
     withPluginApi("0.8", (api) => {
-      console.log("[Field Visibility] Plugin Initializing (DEBUG MODE)...");
       const currentUser = api.getCurrentUser();
       const rules = settings.field_visibility_rules;
 
@@ -135,7 +134,27 @@ export default {
        * @param {number[]} profileUserGroupIds - Group IDs of the profile owner
        */
       function applyVisibilityRules(containerEl, profileUsername, profileUserGroupIds) {
-        const isOwnProfile = currentUser && currentUser.username.toLowerCase() === profileUsername.toLowerCase();
+        // If no current user, hide all restricted fields
+        if (!currentUser) {
+          rules.forEach((rule) => {
+            const fieldInfo = getFieldInfo(rule);
+            if (!fieldInfo) {
+              return;
+            }
+            const allowedGroupIds = getAllowedGroupIds(rule);
+            if (allowedGroupIds.length > 0) {
+              fieldInfo.selectors.forEach((selector) => {
+                const elements = containerEl.querySelectorAll(selector);
+                elements.forEach((el) => {
+                  el.style.setProperty('display', 'none', 'important');
+                });
+              });
+            }
+          });
+          return;
+        }
+
+        const isOwnProfile = currentUser.username.toLowerCase() === profileUsername.toLowerCase();
 
         rules.forEach((rule) => {
           const fieldInfo = getFieldInfo(rule);
@@ -151,7 +170,7 @@ export default {
           if (isOwnProfile) {
             // Always show own fields
             shouldShow = true;
-          } else if (currentUser && (currentUser.admin || currentUser.moderator)) {
+          } else if (currentUser.admin || currentUser.moderator) {
             // Admins and Moderators see everything
             shouldShow = true;
           } else if (allowedGroupIds.length === 0) {
@@ -164,8 +183,6 @@ export default {
             const viewerInGroup = isUserInAllowedGroups(currentUserGroupIds, allowedGroupIds);
             const ownerInGroup = isUserInAllowedGroups(profileUserGroupIds, allowedGroupIds);
             
-            shouldShow = viewerInGroup && ownerInGroup;
-
             shouldShow = viewerInGroup && ownerInGroup;
           }
 
