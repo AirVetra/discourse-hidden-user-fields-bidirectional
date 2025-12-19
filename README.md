@@ -58,3 +58,12 @@ If fields are not showing up as expected:
 1.  Ensure the **Field Name** in settings matches the User Field name exactly (case-insensitive).
 2.  Ensure the user is actually in the allowed group.
 3.  Check the browser console for any errors (if debug mode is enabled).
+
+## Author
+
+**Alexey Goloviznin** (AirVetra)
+
+- GitHub: [@AirVetra](https://github.com/AirVetra)
+- Repository: [discourse-hidden-user-fields-bidirectional](https://github.com/AirVetra/discourse-hidden-user-fields-bidirectional)
+
+> This is a fork with bidirectional visibility enhancements. Original concept by [Derek Putnam](https://github.com/dereklputnam).
