@@ -1,7 +1,11 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
 
-const HV_VERSION = "2025-12-23-bidir-visibility-1";
+// Bump version to verify asset reload
+const HV_VERSION = "2025-12-23-bidir-visibility-2";
+
+// Early log to confirm the initializer file is loaded at all
+console.info(`[Hidden User Fields v${HV_VERSION}] script loaded`);
 
 /**
  * Bidirectional User Field Visibility
