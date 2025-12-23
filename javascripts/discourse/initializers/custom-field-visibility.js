@@ -202,6 +202,7 @@ export default {
         rules.forEach((rule) => {
           const fieldInfo = getFieldInfo(rule);
           if (!fieldInfo) {
+            console.warn(`${logPrefix} skip rule without matching field`, rule);
             return;
           }
 
@@ -223,6 +224,16 @@ export default {
                 profileUserGroupIds.includes(groupId)
             );
             shouldShow = commonGroups.length > 0;
+
+            console.log(`${logPrefix} rule check`, {
+              field: fieldInfo.name,
+              ruleField: rule.field_name,
+              allowedGroupIds,
+              currentUserGroupIds,
+              profileUserGroupIds,
+              commonGroups,
+              shouldShow
+            });
           }
 
           const existing = fieldVisibility.get(fieldInfo.id) || {
