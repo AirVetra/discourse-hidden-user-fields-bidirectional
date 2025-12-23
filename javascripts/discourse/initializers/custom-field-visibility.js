@@ -252,6 +252,15 @@ export default {
         fieldVisibility.forEach(({ info, shouldShow }) => {
           info.selectors.forEach((selector) => {
             const elements = containerEl.querySelectorAll(selector);
+
+            // Debug counts to ensure selectors match elements
+            console.log(`${logPrefix} apply`, {
+              field: info.name,
+              selector,
+              count: elements.length,
+              shouldShow
+            });
+
             elements.forEach((el) => {
               const validDisplay = shouldShow ? "block" : "none";
               el.style.setProperty("display", validDisplay, "important");
@@ -259,6 +268,10 @@ export default {
               if (shouldShow) {
                 el.style.setProperty("visibility", "visible", "important");
                 el.style.setProperty("opacity", "1", "important");
+              } else {
+                // Force-hide defensively
+                el.style.setProperty("visibility", "hidden", "important");
+                el.style.setProperty("opacity", "0", "important");
               }
             });
           });
@@ -274,6 +287,9 @@ export default {
                   if (shouldShow) {
                     el.style.setProperty("visibility", "visible", "important");
                     el.style.setProperty("opacity", "1", "important");
+                  } else {
+                    el.style.setProperty("visibility", "hidden", "important");
+                    el.style.setProperty("opacity", "0", "important");
                   }
                 }
               });
