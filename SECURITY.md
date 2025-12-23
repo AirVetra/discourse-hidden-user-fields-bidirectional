@@ -2,7 +2,7 @@
 
 ## ⚠️ CRITICAL LIMITATION
 
-**This theme component provides UI-level hiding ONLY.**
+**This theme component provides UI-level hiding ONLY. All field data still reaches the browser and is present in `/u/username.json`, DevTools Network, and runtime memory. Do NOT store sensitive data in user fields.**
 
 ### What This Component Does NOT Do
 

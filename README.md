@@ -1,6 +1,6 @@
 # Hidden User Fields for Discourse
 
-> **⚠️ SECURITY WARNING:** This component provides **UI-level hiding ONLY**. Data is still accessible via API. **[Read full security disclosure →](SECURITY.md)**
+> **⚠️ SECURITY WARNING (CLIENT-ONLY):** This component hides fields **only in the UI**. Data still arrives to the browser (e.g., `/u/username.json`) and remains visible in DevTools/Network/console. Do **not** store sensitive data in user fields. **[Read full security disclosure →](SECURITY.md)**
 >
 > **Disclaimer:** The author assumes no liability for data exposure. Test thoroughly before production use.
 
