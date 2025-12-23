@@ -1,14 +1,14 @@
 # Changelog
 
 ## 0.2.1 — 2025-12-23
-- Очистка отладочных логов, минимальный код без лишнего вывода.
-- Усиленное скрытие: принудительное `display: none` / `visibility: hidden` / `opacity: 0` для запрещённых полей, чтобы предотвратить «прорывы» отображения.
+- Removed debug logging; kept minimal code.
+- Strengthened hiding: forced `display: none` / `visibility: hidden` / `opacity: 0` for disallowed fields to prevent leakage.
 
 ## 0.2.0 — 2025-12-23
-- Исправлено пересечение групп: поле показывается только при общей группе между зрителем и владельцем (группы из `allowed_groups`).
-- Нормализация `allowed_groups` к числовым ID (строки/объекты тоже поддерживаются).
-- Кэширование данных пользователя, базовая обработка неавторизованных пользователей, начальное скрытие полей с ограничениями.
+- Fixed group intersection: a field is shown only when viewer and owner share an allowed group (`allowed_groups`).
+- Normalized `allowed_groups` to numeric IDs (supports strings/objects).
+- User data caching, basic handling of unauthenticated users, initial hiding of restricted fields.
 
-## 0.1.0 — первоначальный релиз
-- Базовая двунаправленная видимость (владелец/зритель в разрешённых группах), исключения для владельца, админа и модератора.
+## 0.1.0 — initial release
+- Basic bidirectional visibility (viewer/owner in allowed groups), exceptions for owner, admin, moderator.
 
