@@ -1,6 +1,8 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
 
+const HV_VERSION = "2025-12-23-bidir-visibility-1";
+
 /**
  * Bidirectional User Field Visibility
  * 
@@ -14,6 +16,7 @@ export default {
 
   initialize(container) {
     withPluginApi("0.8", (api) => {
+      const logPrefix = `[Hidden User Fields v${HV_VERSION}]`;
       const currentUser = api.getCurrentUser();
       const rules = settings.field_visibility_rules;
 
@@ -24,12 +27,17 @@ export default {
       const site = container.lookup("service:site");
       const userFields = site.get("user_fields");
 
-      console.log("[Field Visibility] Init");
-      console.log("Rules:", JSON.stringify(rules));
-      console.log("User Fields:", JSON.stringify(userFields));
+      console.log(`${logPrefix} init`, {
+        rules,
+        userFields: userFields?.map?.((f) => ({
+          id: f.id,
+          name: f.name,
+          dasherized_name: f.dasherized_name
+        }))
+      });
 
       if (!userFields) {
-        console.warn("[Field Visibility] No user_fields found!");
+        console.warn(`${logPrefix} no user_fields found`);
         return;
       }
 
@@ -45,11 +53,37 @@ export default {
        * @returns {number[]} Array of group IDs
        */
       function getAllowedGroupIds(rule) {
-        if (Array.isArray(rule.allowed_groups)) {
-          return rule.allowed_groups;
-        } else if (typeof rule.allowed_groups === 'string') {
-          return rule.allowed_groups.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id));
+        if (!rule || !rule.allowed_groups) {
+          return [];
         }
+
+        // Theme settings "groups" type returns array of group ids (numbers).
+        // Be defensive in case of objects or strings from older data.
+        if (Array.isArray(rule.allowed_groups)) {
+          return rule.allowed_groups
+            .map((g) => {
+              if (typeof g === "number") {
+                return g;
+              }
+              if (typeof g === "string") {
+                const parsed = parseInt(g, 10);
+                return isNaN(parsed) ? null : parsed;
+              }
+              if (g && typeof g === "object" && typeof g.id !== "undefined") {
+                return parseInt(g.id, 10);
+              }
+              return null;
+            })
+            .filter((id) => typeof id === "number" && !isNaN(id));
+        }
+
+        if (typeof rule.allowed_groups === "string") {
+          return rule.allowed_groups
+            .split(",")
+            .map((id) => parseInt(id.trim(), 10))
+            .filter((id) => !isNaN(id));
+        }
+
         return [];
       }
 
