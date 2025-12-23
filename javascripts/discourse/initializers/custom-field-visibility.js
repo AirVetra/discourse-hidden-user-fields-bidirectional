@@ -24,7 +24,12 @@ export default {
       const site = container.lookup("service:site");
       const userFields = site.get("user_fields");
 
+      console.log("[Field Visibility] Init");
+      console.log("Rules:", JSON.stringify(rules));
+      console.log("User Fields:", JSON.stringify(userFields));
+
       if (!userFields) {
+        console.warn("[Field Visibility] No user_fields found!");
         return;
       }
 
@@ -177,13 +182,21 @@ export default {
             // No groups configured - show to everyone
             shouldShow = true;
           } else {
-            // Check bidirectional visibility:
-            // 1. Current user must be in allowed group
-            // 2. Profile owner must also be in allowed group
-            const viewerInGroup = isUserInAllowedGroups(currentUserGroupIds, allowedGroupIds);
-            const ownerInGroup = isUserInAllowedGroups(profileUserGroupIds, allowedGroupIds);
+            // Check intersection visibility:
+            // The viewer and the owner must share at least one common group
+            // that is also in the Allowed Groups list.
+            const commonGroups = allowedGroupIds.filter(groupId => 
+              currentUserGroupIds.includes(groupId) && profileUserGroupIds.includes(groupId)
+            );
             
-            shouldShow = viewerInGroup && ownerInGroup;
+            shouldShow = commonGroups.length > 0;
+
+            console.log(`[Visibility Check] Field: ${fieldInfo.name}`);
+            console.log(`  Viewer Groups: ${JSON.stringify(currentUserGroupIds)}`);
+            console.log(`  Owner Groups: ${JSON.stringify(profileUserGroupIds)}`);
+            console.log(`  Allowed Groups: ${JSON.stringify(allowedGroupIds)}`);
+            console.log(`  Common Groups: ${JSON.stringify(commonGroups)}`);
+            console.log(`  -> Should Show: ${shouldShow}`);
           }
 
           // Apply visibility to all matching elements
