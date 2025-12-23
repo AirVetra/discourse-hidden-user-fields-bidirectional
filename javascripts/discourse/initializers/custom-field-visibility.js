@@ -1,12 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
 
-// Bump version to verify asset reload
-const HV_VERSION = "2025-12-23-bidir-visibility-2";
-
-// Early log to confirm the initializer file is loaded at all
-console.info(`[Hidden User Fields v${HV_VERSION}] script loaded`);
-
 /**
  * Bidirectional User Field Visibility
  * 
@@ -20,7 +14,6 @@ export default {
 
   initialize(container) {
     withPluginApi("0.8", (api) => {
-      const logPrefix = `[Hidden User Fields v${HV_VERSION}]`;
       const currentUser = api.getCurrentUser();
       const rules = settings.field_visibility_rules;
 
@@ -31,17 +24,7 @@ export default {
       const site = container.lookup("service:site");
       const userFields = site.get("user_fields");
 
-      console.log(`${logPrefix} init`, {
-        rules,
-        userFields: userFields?.map?.((f) => ({
-          id: f.id,
-          name: f.name,
-          dasherized_name: f.dasherized_name
-        }))
-      });
-
       if (!userFields) {
-        console.warn(`${logPrefix} no user_fields found`);
         return;
       }
 
@@ -206,7 +189,6 @@ export default {
         rules.forEach((rule) => {
           const fieldInfo = getFieldInfo(rule);
           if (!fieldInfo) {
-            console.warn(`${logPrefix} skip rule without matching field`, rule);
             return;
           }
 
@@ -228,16 +210,6 @@ export default {
                 profileUserGroupIds.includes(groupId)
             );
             shouldShow = commonGroups.length > 0;
-
-            console.log(`${logPrefix} rule check`, {
-              field: fieldInfo.name,
-              ruleField: rule.field_name,
-              allowedGroupIds,
-              currentUserGroupIds,
-              profileUserGroupIds,
-              commonGroups,
-              shouldShow
-            });
           }
 
           const existing = fieldVisibility.get(fieldInfo.id) || {
@@ -252,14 +224,6 @@ export default {
         fieldVisibility.forEach(({ info, shouldShow }) => {
           info.selectors.forEach((selector) => {
             const elements = containerEl.querySelectorAll(selector);
-
-            // Debug counts to ensure selectors match elements
-            console.log(`${logPrefix} apply`, {
-              field: info.name,
-              selector,
-              count: elements.length,
-              shouldShow
-            });
 
             elements.forEach((el) => {
               const validDisplay = shouldShow ? "block" : "none";
