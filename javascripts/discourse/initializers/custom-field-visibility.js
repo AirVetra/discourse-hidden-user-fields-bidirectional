@@ -161,6 +161,10 @@ export default {
 
         const isOwnProfile = currentUser.username.toLowerCase() === profileUsername.toLowerCase();
 
+        // Aggregate visibility per field so that multiple rules for the same field
+        // result in OR logic (visible if any matching rule allows it).
+        const fieldVisibility = new Map();
+
         rules.forEach((rule) => {
           const fieldInfo = getFieldInfo(rule);
           if (!fieldInfo) {
@@ -168,69 +172,59 @@ export default {
           }
 
           const allowedGroupIds = getAllowedGroupIds(rule);
-          
-          // Determine if field should be visible
           let shouldShow = false;
-          
+
           if (isOwnProfile) {
-            // Always show own fields
             shouldShow = true;
           } else if (currentUser.admin || currentUser.moderator) {
-            // Admins and Moderators see everything
             shouldShow = true;
           } else if (allowedGroupIds.length === 0) {
-            // No groups configured - show to everyone
             shouldShow = true;
           } else {
-            // Check intersection visibility:
-            // The viewer and the owner must share at least one common group
-            // that is also in the Allowed Groups list.
-            const commonGroups = allowedGroupIds.filter(groupId => 
-              currentUserGroupIds.includes(groupId) && profileUserGroupIds.includes(groupId)
+            // Bidirectional, group-isolated visibility:
+            // viewer and owner must share at least one allowed group.
+            const commonGroups = allowedGroupIds.filter(
+              (groupId) =>
+                currentUserGroupIds.includes(groupId) &&
+                profileUserGroupIds.includes(groupId)
             );
-            
             shouldShow = commonGroups.length > 0;
-
-            console.log(`[Visibility Check] Field: ${fieldInfo.name}`);
-            console.log(`  Viewer Groups: ${JSON.stringify(currentUserGroupIds)}`);
-            console.log(`  Owner Groups: ${JSON.stringify(profileUserGroupIds)}`);
-            console.log(`  Allowed Groups: ${JSON.stringify(allowedGroupIds)}`);
-            console.log(`  Common Groups: ${JSON.stringify(commonGroups)}`);
-            console.log(`  -> Should Show: ${shouldShow}`);
           }
 
-          // Apply visibility to all matching elements
-          fieldInfo.selectors.forEach((selector) => {
+          const existing = fieldVisibility.get(fieldInfo.id) || {
+            info: fieldInfo,
+            shouldShow: false
+          };
+          existing.shouldShow = existing.shouldShow || shouldShow;
+          fieldVisibility.set(fieldInfo.id, existing);
+        });
+
+        // Apply the aggregated visibility
+        fieldVisibility.forEach(({ info, shouldShow }) => {
+          info.selectors.forEach((selector) => {
             const elements = containerEl.querySelectorAll(selector);
             elements.forEach((el) => {
-              // We must set explicit 'block' (or whatever is appropriate) to override the
-              // stylesheet's 'display: none'. Removing the property (setting '') causes
-              // fallback to the stylesheet which hides it.
-              // We use !important to ensure we override any specific CSS rules.
-              const validDisplay = shouldShow ? 'block' : 'none';
-              el.style.setProperty('display', validDisplay, 'important');
-              
+              const validDisplay = shouldShow ? "block" : "none";
+              el.style.setProperty("display", validDisplay, "important");
+
               if (shouldShow) {
-                // Also force visibility/opacity to ensure it's not hidden by other means,
-                // while keeping the layout flow with 'block'.
-                el.style.setProperty('visibility', 'visible', 'important');
-                el.style.setProperty('opacity', '1', 'important');
+                el.style.setProperty("visibility", "visible", "important");
+                el.style.setProperty("opacity", "1", "important");
               }
             });
           });
 
           // Also check document-wide for user cards that might be outside the container
-          if (containerEl.id === 'user-card') {
-            fieldInfo.selectors.forEach((selector) => {
+          if (containerEl.id === "user-card") {
+            info.selectors.forEach((selector) => {
               const elements = document.querySelectorAll(selector);
               elements.forEach((el) => {
-                // Only apply if element is within or is the user card
-                if (containerEl.contains(el) || el.closest('#user-card') === containerEl) {
-                  const validDisplay = shouldShow ? 'block' : 'none';
-                  el.style.setProperty('display', validDisplay, 'important');
+                if (containerEl.contains(el) || el.closest("#user-card") === containerEl) {
+                  const validDisplay = shouldShow ? "block" : "none";
+                  el.style.setProperty("display", validDisplay, "important");
                   if (shouldShow) {
-                    el.style.setProperty('visibility', 'visible', 'important');
-                    el.style.setProperty('opacity', '1', 'important');
+                    el.style.setProperty("visibility", "visible", "important");
+                    el.style.setProperty("opacity", "1", "important");
                   }
                 }
               });
